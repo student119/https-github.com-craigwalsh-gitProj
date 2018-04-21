@@ -1,0 +1,402 @@
+#include "stdafx.h"
+#include "stdlib.h"
+#include "stdio.h"
+#include "string.h"
+#include "ctype.h"
+
+FILE *commandPointer;
+
+void OpenFile(char *argument[]);
+void CloseFile();
+
+typedef struct Date
+
+{
+
+	int day;
+	int month;
+	int year;
+
+};
+
+typedef struct Time
+
+{
+
+	int startHour;
+	int startMinute;
+	int endHour;
+	int endMinute;
+
+};
+
+typedef struct workTime
+
+{
+
+	int employeeID;
+	struct Date date;
+	struct Time startTime;
+	struct Time endTime;
+
+};
+
+struct workTime employee[20];
+
+int main(int argc, char *argument[])
+
+{
+
+	OpenFile(argument);
+
+	return 0;
+
+}
+
+void OpenFile(char *commandArgument[])
+
+{
+
+	int i = 2;
+	int j = 0;
+	int l = 0;
+	int n = 0;
+	char delimiter1[2] = "/";
+	char delimiter2[5] = ":";
+	char delimiter3[5] = "\", :";
+	char printToken[50];
+	char *commandToken;
+	char commandHolder[30];
+	char months[12][20] = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
+
+	printf("%s\n", commandArgument[0]);
+	printf("%s\n", commandArgument[1]);
+
+	commandPointer = fopen("C:\\Users\\CraigBreathnach\\Desktop\\workLog.txt", "a+");
+
+	if (!strcmp(commandArgument[i], "/a"))
+
+	{
+
+		do
+
+		{
+
+			if (commandArgument[i++] != NULL)
+
+			{
+
+				employee[j].employeeID = atoi(commandArgument[i]);
+				i++;
+
+			}
+
+			if ((commandToken = strtok(commandArgument[i], delimiter1)) != NULL)
+
+			{
+
+				employee[j].date.day = atoi(commandToken);
+
+			}
+
+			if ((commandToken = strtok(NULL, delimiter1)) != NULL)
+
+			{
+
+				employee[j].date.month = atoi(commandToken);
+
+			}
+
+			if ((commandToken = strtok(NULL, delimiter1)) != NULL)
+
+			{
+
+				employee[j].date.year = atoi(commandToken);
+				i++;
+
+			}
+
+			if ((commandToken = strtok(commandArgument[i], delimiter2)) != NULL)
+
+			{
+
+				employee[j].startTime.startHour = atoi(commandToken);
+
+			}
+
+			if ((commandToken = strtok(NULL, delimiter2)) != NULL)
+
+			{
+
+				employee[j].startTime.startMinute = atoi(commandToken);
+				i++;
+
+			}
+
+			if ((commandToken = strtok(commandArgument[i], delimiter2)) != NULL)
+
+			{
+
+				employee[j].endTime.endHour = atoi(commandToken);
+
+			}
+
+			if ((commandToken = strtok(NULL, delimiter2)) != NULL)
+
+			{
+
+				employee[j].endTime.endMinute = atoi(commandToken);
+
+			}
+
+			sprintf(commandHolder, "\"%s ", months[employee[j - 1].date.month]);
+			fputs(commandHolder, commandPointer);
+
+			sprintf(commandHolder, "%d ", employee[j].date.day);
+			fputs(commandHolder, commandPointer);
+
+			sprintf(commandHolder, "%d\",", employee[j].date.year);
+			fputs(commandHolder, commandPointer);
+
+			sprintf(commandHolder, "\"%d\",", employee[j].employeeID);
+			fputs(commandHolder, commandPointer);
+
+			sprintf(commandHolder, "\"%d : ", employee[j].startTime.startHour);
+			fputs(commandHolder, commandPointer);
+
+			sprintf(commandHolder, "%d\",", employee[j].startTime.startMinute);
+			fputs(commandHolder, commandPointer);
+
+			sprintf(commandHolder, "\"%d : ", employee[j].endTime.endHour);
+			fputs(commandHolder, commandPointer);
+
+			sprintf(commandHolder, "%d\"\n", employee[j].endTime.endMinute);
+			fputs(commandHolder, commandPointer);
+
+			j++;
+
+			if (!strcmp(commandArgument[i + 1], "/p"))
+
+			{
+
+				rewind(commandPointer);
+
+				printf("All Enployees \n");
+
+				while (!feof(commandPointer))
+
+				{
+
+					fgets(printToken, 70, commandPointer);
+
+					if ((commandToken = strtok(printToken, delimiter3)) != NULL)
+
+					{
+
+						for (int k = 0; k < 12; k++)
+
+						{
+
+							if (!strcmp(months[k], printToken))
+
+							{
+
+								employee[l].date.month = k;
+
+							}
+
+						}
+
+					}
+
+					if ((commandToken = strtok(NULL, delimiter3)) != NULL)
+
+					{
+
+						employee[l].date.day = atoi(commandToken);
+
+					}
+
+					if ((commandToken = strtok(NULL, delimiter3)) != NULL)
+
+					{
+
+						employee[l].date.year = atoi(commandToken);
+
+					}
+
+					if ((commandToken = strtok(NULL, delimiter3)) != NULL)
+
+					{
+
+						employee[l].employeeID = atoi(commandToken);
+
+					}
+
+					if ((commandToken = strtok(NULL, delimiter3)) != NULL)
+
+					{
+
+						employee[l].startTime.startHour = atoi(commandToken);
+
+					}
+
+					if ((commandToken = strtok(NULL, delimiter3)) != NULL)
+
+					{
+
+						employee[l].startTime.startMinute = atoi(commandToken);
+
+					}
+
+					if ((commandToken = strtok(NULL, delimiter3)) != NULL)
+
+					{
+						employee[l].endTime.endHour = atoi(commandToken);
+
+					}
+
+					if ((commandToken = strtok(NULL, delimiter3)) != NULL)
+
+					{
+						employee[l].endTime.endMinute = atoi(commandToken);
+
+					}
+
+					printf("Date : %d %d %d Employee : %d started at %d : %d and finished at %d : %d.\n", employee[l].date.day, employee[l].date.month, employee[l].date.year, employee[l].employeeID,
+						employee[l].startTime.startHour, employee[l].startTime.startMinute, employee[l].endTime.endHour, employee[l].endTime.endMinute);
+
+					l++;
+
+					if (l == j)
+
+					{
+
+						break;
+
+					}
+
+				}
+
+				if (!strcmp(commandArgument[i + 2], "/s"))
+
+				{
+
+					rewind(commandPointer);
+
+					printf("Searched Employees \n");
+
+					while (!feof(commandPointer))
+
+					{
+
+						fgets(printToken, 70, commandPointer);
+
+						if ((commandToken = strtok(printToken, delimiter3)) != NULL)
+
+						{
+
+							for (int m = 0; m < 12; m++)
+
+							{
+
+								if (!strcmp(months[m], printToken))
+
+								{
+
+									employee[n].date.month = m;
+
+								}
+
+							}
+
+						}
+
+						if ((commandToken = strtok(NULL, delimiter3)) != NULL)
+
+						{
+
+							employee[n].date.day = atoi(commandToken);
+
+						}
+
+						if ((commandToken = strtok(NULL, delimiter3)) != NULL)
+
+						{
+
+							employee[n].date.year = atoi(commandToken);
+
+						}
+
+						if ((commandToken = strtok(NULL, delimiter3)) != NULL)
+
+						{
+
+							employee[n].employeeID = atoi(commandToken);
+
+						}
+
+						if ((commandToken = strtok(NULL, delimiter3)) != NULL)
+
+						{
+
+							employee[n].startTime.startHour = atoi(commandToken);
+
+						}
+
+						if ((commandToken = strtok(NULL, delimiter3)) != NULL)
+
+						{
+
+							employee[n].startTime.startMinute = atoi(commandToken);
+
+						}
+
+						if ((commandToken = strtok(NULL, delimiter3)) != NULL)
+
+						{
+							employee[n].endTime.endHour = atoi(commandToken);
+
+						}
+
+						if ((commandToken = strtok(NULL, delimiter3)) != NULL)
+
+						{
+							employee[n].endTime.endMinute = atoi(commandToken);
+
+						}
+
+						if (employee[n].employeeID == atoi(commandArgument[i + 3]))
+
+						{
+
+							printf("Date : %d %d %d Employee : %d started at %d : %d and finished at %d : %d.\n", employee[n].date.day, employee[n].date.month, employee[n].date.year, employee[n].employeeID,
+								employee[n].startTime.startHour, employee[n].startTime.startMinute, employee[n].endTime.endHour, employee[n].endTime.endMinute);
+
+						}
+
+						n++;
+
+					}
+
+				}
+
+				break;
+
+			}
+
+		} while (strcmp(commandArgument[i], "/p"));
+
+	}
+
+	CloseFile();
+
+}
+
+void CloseFile()
+
+{
+
+	fclose(commandPointer);
+
+}
