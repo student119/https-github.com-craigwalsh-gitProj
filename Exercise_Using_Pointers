@@ -1,0 +1,178 @@
+#include "stdafx.h"
+#include "ctype.h"
+#include "math.h"
+#include "stdio.h"
+#include "stdlib.h"
+#include "string.h"
+
+void charAddresses(char *string); // 1st function to do
+void commaToSpace(char *string2); // 2nd function to do
+void printWord(char *start1); //3rd function to do
+char *nextWord(char *start2); // 4th function to do
+
+int main()
+
+{
+
+	int i = 0;
+	char location[200] = "7825,CREEK VALLEY,SACRAMENTO,95828,CA";
+	char *pointer;
+
+	puts("Address :         Character :");
+	// 1. Call function to print out the address and content of each character in the input array
+	charAddresses(location);
+	printf("\n");
+
+	puts("Without Commas :");
+	// 2. Call function to replace all the commas in the input string with tabs
+	commaToSpace(location);
+
+	//puts(location);
+	puts("\n");
+
+	// 3. Instead of printing characters (using putchar) until a '\0', printWord prints characters until a space ' '
+	puts("First Word :");
+	printWord(location);
+	puts("\n");
+
+	puts("Second Word :");
+	printWord(location + 5);
+	puts("\n");
+
+	puts("Third Word :");
+	printWord(location + 11);
+	puts("\n");
+
+	// starting from the first character in the input string, each call to "nextWord" should return the next word in the string
+	// e.g. if the input string is "Hi there everyone" :
+	// first call to nextWord should return the address of the letter 't' of "there"
+	// second call to nextWord should return the address of the first letter 'e'of "everyone"
+	// third call to nextWord should return NULL
+
+	puts("Words printed via Pointer : ");
+
+	pointer = location;
+
+	while (pointer)
+
+	{
+
+		// instead of printing characters (using putchar) until a '\0', printWord prints characters until a space ' '
+		printWord(pointer);
+		printf("\n");
+		pointer = nextWord(pointer);
+
+	}
+
+	printf("\n");
+
+	return 0;
+
+}
+
+void charAddresses(char *string1)
+
+{
+
+	// insert your code here
+	//char charAddress[10] = "Address";
+	//char charCharacter[10] = "Character";
+
+	//printf("%s         %s\n", charAddress, charCharacter);
+
+	//int j;
+	//int length0 = strlen(string1);
+
+	for (int j = 0; j < *(string1 + j)!='\0'; j++)
+
+	{
+
+		printf("%p          %c\n", &*(string1 + j), *(string1 + j));
+
+	}
+
+}
+
+void commaToSpace(char *string2)
+
+{
+
+	// insert your code here
+
+
+	//int k;
+	//int length1 = strlen(string2);
+
+	for (int k = 0; k < *(string2 + k) != '\0'; k++)
+
+	{
+
+		if (*(string2 + k) == ',')
+
+		{
+
+			*(string2 + k) = ' ';
+
+		}
+
+		putchar(*(string2 + k));
+	
+	}
+
+}
+
+void printWord(char *start1)
+
+{
+
+	// insert your code here
+
+	//int l;
+	//int length2 = strlen(start1);
+
+	for (int l = 0; l < *(start1 + l) != '\0'; l++)
+
+	{
+
+		if (*(start1 + l) == 32)
+
+		{
+
+			break;
+
+		}
+
+		putchar(*(start1 + l));
+
+	}
+
+}
+
+char *nextWord(char *start2)
+
+{
+
+	// insert your code here
+	// of course it should only return NULL if there are no more words
+	// HINT: 'return (start+i)' will return member [i] of the array (string) pointed at by 'start'
+
+	//int m;
+	//int length3 = 1;
+
+	for (int m = 0; m < *(start2 + m) != '\0'; m++)
+
+	{
+
+		if (*(start2 + m) == 32)
+
+		{
+
+			return (start2 + m + 1);
+
+		}
+
+	}
+
+	return NULL;
+
+}
